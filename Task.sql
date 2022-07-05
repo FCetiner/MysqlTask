@@ -11,7 +11,7 @@ INSERT INTO ogrenciler VALUES(754, 'Merve Gül', 10);
 INSERT INTO ogrenciler VALUES(854, 'Ahmet Arik', 9);
 INSERT INTO ogrenciler VALUES(741, 'Mehmet Pehlivan', 11);
 INSERT INTO ogrenciler VALUES(562, 'Can Demir', 12);
-INSERT INTO ogrenciler VALUES(965, 'Kemsl Can', 9);
+INSERT INTO ogrenciler VALUES(965, 'Kemal Can', 9);
 
 CREATE TABLE kitaplar(
 kitap_id int PRIMARY key,
@@ -41,11 +41,44 @@ CREATE TABLE dokum(
 kitap_id int,
 ogrenci_no int,
 alis_tarihi date,
-veris_tatihi date,
+veris_tarihi date,
 onay int);
+drop table dokum;
+INSERT INTO dokum VALUES(12, 562, '2021-02-12', '2021-02-28', 1);
+INSERT INTO dokum VALUES(12, 965, '2021-03-15', '2021-03-31', 0);
+INSERT INTO dokum VALUES(18, 741, '2021-03-31', '2021-04-15', 0);
+INSERT INTO dokum VALUES(20, 523, '2021-03-31', '2021-04-15', 1);
+INSERT INTO dokum VALUES(23, 965, '2021-04-28', '2021-05-13', 0);
+select * from dokum;
+-- Tum ogrencilerin listesini getiren sorguyu yazin
+select * from ogrenciler;
 
-INSERT INTO dokum VALUES(12, 562, 02/12/2021, 02/28/2021, 1);
-INSERT INTO dokum VALUES(12, 965, 03/15/2021, 03/31/2021, 0);
-INSERT INTO dokum VALUES(18, 741, 03/31/2021, 04/15/2021, 0);
-INSERT INTO dokum VALUES(20, 523, 03/31/2021, 04/15/2021, 1);
-INSERT INTO dokum VALUES(23, 965, 04/28/2021, 05/13/2021, 0);
+-- Tum kitaplarin listesini getiren sorguyu yazin
+select * from kitaplar;
+
+-- George orwella ait kitaplarin sorgusunu yapin
+select * from kitaplar where yazar='George Orwell';  -- neden 3. satirda null cikti?
+
+-- George orwella ait kitaplarin sorgusunu yapin
+select * from kitaplar where yazar='Iskender Pala';
+
+-- kaynagi yabanci olan kitaplari listeleyin
+select * from kitaplar where kaynak='yabanci';
+
+-- mart ayinda alinan kitaplari listeleyin
+
+select kitap_adi from kitaplar where kitap_id IN (select kitap_id from dokum where alis_tarihi between '2021-03-01' and '2021-03-31');
+
+
+-- teslim eidlmeyen kitaplarin kimde oldugunu listeleyin
+select o.adi_soyadi as ogrenci_adi, k.kitap_adi as kitap from dokum d
+left join kitaplar k on k.kitap_id=d.kitap_id
+left join ogrenciler o on o.ogrenciNo=d.ogrenci_no
+where d.onay=0;
+
+-- kaynagi yabanci olan kac kitap vardir
+select count(*) from kitaplar where kaynak='yabanci';
+
+-- adinin ilk harfi s olan kitaplari listeleyin
+
+select kitap_adi from kitaplar where kitap_adi like 's%';
